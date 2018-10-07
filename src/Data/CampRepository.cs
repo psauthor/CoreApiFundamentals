@@ -59,6 +59,27 @@ namespace CoreCodeCamp.Data
       return await query.ToArrayAsync();
     }
 
+    public async Task<Camp[]> GetAllCampsByEventDate(DateTime dateTime, bool includeTalks = false)
+    {
+      _logger.LogInformation($"Getting all Camps");
+
+      IQueryable<Camp> query = _context.Camps
+          .Include(c => c.Location);
+
+      if (includeTalks)
+      {
+        query = query
+          .Include(c => c.Talks)
+          .ThenInclude(t => t.Speaker);
+      }
+
+      // Order It
+      query = query.OrderByDescending(c => c.EventDate)
+        .Where(c => c.EventDate.Date == dateTime.Date);
+
+      return await query.ToArrayAsync();
+    }
+    
     public async Task<Camp> GetCampAsync(string moniker, bool includeTalks = false)
     {
       _logger.LogInformation($"Getting a Camp for {moniker}");
