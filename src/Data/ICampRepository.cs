@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CoreCodeCamp.Data
@@ -16,11 +17,13 @@ namespace CoreCodeCamp.Data
     Task<Camp[]> GetAllCampsByEventDate(DateTime dateTime, bool includeTalks = false);
 
     // Talks
-    Task<Talk> GetTalkAsync(int talkId, bool includeSpeakers = false);
+    Task<Talk> GetTalkByMonikerAsync(string moniker, int talkId, bool includeSpeakers = false);
     Task<Talk[]> GetTalksByMonikerAsync(string moniker, bool includeSpeakers = false);
 
     // Speakers
     Task<Speaker[]> GetSpeakersByMonikerAsync(string moniker);
+    Task<Speaker> GetSpeakerAsync(int speakerId);
+    Task<Speaker[]> GetAllSpeakersAsync();
 
   }
 }

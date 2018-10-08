@@ -39,26 +39,6 @@ namespace CoreCodeCamp.Data
       return (await _context.SaveChangesAsync()) > 0;
     }
 
-    public async Task<Camp[]> GetAllCampsAsync(bool includeTalks = false)
-    {
-      _logger.LogInformation($"Getting all Camps");
-
-      IQueryable<Camp> query = _context.Camps
-          .Include(c => c.Location);
-
-      if (includeTalks)
-      {
-        query = query
-          .Include(c => c.Talks)
-          .ThenInclude(t => t.Speaker);
-      }
-
-      // Order It
-      query = query.OrderByDescending(c => c.EventDate);
-
-      return await query.ToArrayAsync();
-    }
-
     public async Task<Camp[]> GetAllCampsByEventDate(DateTime dateTime, bool includeTalks = false)
     {
       _logger.LogInformation($"Getting all Camps");
@@ -79,7 +59,27 @@ namespace CoreCodeCamp.Data
 
       return await query.ToArrayAsync();
     }
-    
+
+    public async Task<Camp[]> GetAllCampsAsync(bool includeTalks = false)
+    {
+      _logger.LogInformation($"Getting all Camps");
+
+      IQueryable<Camp> query = _context.Camps
+          .Include(c => c.Location);
+
+      if (includeTalks)
+      {
+        query = query
+          .Include(c => c.Talks)
+          .ThenInclude(t => t.Speaker);
+      }
+
+      // Order It
+      query = query.OrderByDescending(c => c.EventDate);
+
+      return await query.ToArrayAsync();
+    }
+
     public async Task<Camp> GetCampAsync(string moniker, bool includeTalks = false)
     {
       _logger.LogInformation($"Getting a Camp for {moniker}");
@@ -119,7 +119,7 @@ namespace CoreCodeCamp.Data
       return await query.ToArrayAsync();
     }
 
-    public async Task<Talk> GetTalkAsync(int talkId, bool includeSpeakers = false)
+    public async Task<Talk> GetTalkByMonikerAsync(string moniker, int talkId, bool includeSpeakers = false)
     {
       _logger.LogInformation($"Getting all Talks for a Camp");
 
@@ -133,22 +133,44 @@ namespace CoreCodeCamp.Data
 
       // Add Query
       query = query
-        .Where(t => t.TalkId == talkId);
+        .Where(t => t.TalkId == talkId && t.Camp.Moniker == moniker);
 
       return await query.FirstOrDefaultAsync();
     }
 
     public async Task<Speaker[]> GetSpeakersByMonikerAsync(string moniker)
     {
-      //_logger.LogInformation($"Getting all Speakers for a Camp");
+      _logger.LogInformation($"Getting all Speakers for a Camp");
 
-      //IQueryable<Speaker> query = _context.Speakers
-      //  .Where(t => t.Camp.Moniker == moniker)
-      //  .OrderByDescending(t => t.Title);
+      IQueryable<Speaker> query = _context.Talks
+        .Where(t => t.Camp.Moniker == moniker)
+        .Select(t => t.Speaker)
+        .Where(s => s != null)
+        .OrderBy(s => s.LastName)
+        .Distinct();
 
-      //return await query.ToListAsync();
-      return await Task.FromResult<Speaker[]>(null);
+      return await query.ToArrayAsync();
     }
 
+    public async Task<Speaker[]> GetAllSpeakersAsync()
+    {
+      _logger.LogInformation($"Getting Speaker");
+
+      var query = _context.Speakers
+        .OrderBy(t => t.LastName);
+
+      return await query.ToArrayAsync();
+    }
+
+
+    public async Task<Speaker> GetSpeakerAsync(int speakerId)
+    {
+      _logger.LogInformation($"Getting Speaker");
+
+      var query = _context.Speakers
+        .Where(t => t.SpeakerId == speakerId);
+
+      return await query.FirstOrDefaultAsync();
+    }
   }
 }
