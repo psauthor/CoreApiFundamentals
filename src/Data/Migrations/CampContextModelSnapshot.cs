@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoreCodeCamp.Migrations
 {
-    [DbContext(typeof(CampContext))]
+    [DbContext(typeof(CustomerContext))]
     partial class CampContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

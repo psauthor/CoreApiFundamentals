@@ -19,11 +19,12 @@ namespace CoreCodeCamp
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CampContext>();
-            services.AddScoped<ICampRepository, CampRepository>();
+            //services.AddDbContext<CampContext>();
+            services.AddDbContext<CustomerContext>();
+            //services.AddScoped<ICampRepository, CampRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
 
             services.AddAutoMapper();
-
 
             services.AddMvc()
               .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

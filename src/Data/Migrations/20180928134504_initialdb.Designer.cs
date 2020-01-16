@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoreCodeCamp.Migrations
 {
-    [DbContext(typeof(CampContext))]
+    [DbContext(typeof(CustomerContext))]
     [Migration("20180928134504_initialdb")]
     partial class initialdb
     {
