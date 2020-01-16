@@ -21,8 +21,10 @@ namespace CoreCodeCamp
         {
             //services.AddDbContext<CampContext>();
             services.AddDbContext<CustomerContext>();
+            services.AddDbContext<MenuContext>();
             //services.AddScoped<ICampRepository, CampRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IMenuRepository, MenuRepository>();
 
             services.AddAutoMapper();
 
