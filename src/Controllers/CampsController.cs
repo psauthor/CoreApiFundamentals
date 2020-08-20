@@ -31,9 +31,7 @@ namespace CoreCodeCamp.Controllers
             {
                 var results = await _repository.GetAllCampsAsync();
 
-                CampModel[] models = _mapper.Map<CampModel[]>(results);
-
-                return models;
+                return _mapper.Map<CampModel[]>(results);
             }
             catch (Exception)
             {
